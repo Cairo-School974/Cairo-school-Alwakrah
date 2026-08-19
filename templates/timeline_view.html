@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الجدول الزمني العام</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="container">
+        <div class="back-home">
+            <a href="/exams_timeline" class="btn-back">⬅ العودة لقسم الجداول</a>
+        </div>
+
+        <div class="hero-section">
+            <h1>الجدول الزمني العام</h1>
+            <p>استعراض الجدول الزمني العام للمدرسة والفعاليات الدراسية</p>
+        </div>
+
+        <div class="section-box" style="max-width: 600px; margin: auto; text-align: center;">
+            {% if file_id %}
+                <div class="success-box">
+                    <p style="margin-bottom: 20px; font-size: 18px;">الجدول الزمني متاح الآن للاطلاع والتحميل:</p>
+                    <a href="/drive/file/{{ file_id }}" target="_blank" class="btn-pdf-glowing">عرض وتحميل الجدول الزمني العام (PDF)</a>
+                </div>
+            {% else %}
+                <p class="error-msg" style="color: #ff6b6b; font-size: 18px;">عذراً، الجدول الزمني غير متاح حالياً، سيتم إضافته قريباً من قبل الإدارة.</p>
+            {% endif %}
+        </div>
+
+        <div class="footer-copyright" style="margin-top: 60px;">
+            <p>جميع الحقوق محفوظة © روضة ومدرسة القاهرة الإبتدائية الإعدادية</p>
+        </div>
+    </div>
+
+</body>
+</html>
