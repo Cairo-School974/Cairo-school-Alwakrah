@@ -22,9 +22,9 @@
             <form method="POST" class="selection-form">
                 
                 <div class="form-group">
-                    <label for="final_term">اختر الفصل الدراسي:</label>
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-main);">اختر الفصل الدراسي:</label>
                     <select name="final_term" id="final_term" required>
-                        <option value="">-- اختر الفصل الدراسي --</option>
+                        <option value="" disabled selected>--اختر الفصل الدراسي--</option>
                         <option value="term1" {% if selected_term == 'term1' %}selected{% endif %}>الفصل الدراسي الأول</option>
                         <option value="term2" {% if selected_term == 'term2' %}selected{% endif %}>الفصل الدراسي الثاني</option>
                     </select>

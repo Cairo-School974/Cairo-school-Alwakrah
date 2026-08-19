@@ -63,7 +63,7 @@
             const evalType = document.getElementById('eval_type');
             
             // تفريغ القائمة التحتية
-            evalType.innerHTML = '<option value="">-- اختر التقييم المطلوب --</option>';
+            evalType.innerHTML = '<option value="" disabled selected>-- اختر التقييم--</option>';
             
             if (term === 'term1') {
                 evalType.innerHTML += '<option value="eval1">اختبار التقييم الأول</option>';
