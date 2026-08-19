@@ -93,16 +93,40 @@ def find_nested_file_in_drive(subfolder_name, file_name):
 def home(): 
     return render_template("index.html")
 
+# صفحة اتصل بنا (تعمل بدون أخطاء 404)
+@app.route("/contact")
+def contact():
+    return render_template("contact.html")
+
 # صفحة المربعات الثلاثة الرئيسية
 @app.route("/exams_timeline")
 def exams_timeline(): 
-    return render_template("exams_main.html")
+    return render_template("exams_timeline.html")
 
-# صفحة الجدول الزمني العام المستقلة
-@app.route("/exams_timeline/timeline")
+# صفحة الجدول الزمني العام المستقلة (مربوطة بـ Google Drive للبحث عن ملف timeline.pdf أو ما شابه)
+@app.route("/exams_timeline/timeline", methods=["GET", "POST"])
 def timeline_page():
-    file_id = find_exam_or_timeline_file("timeline", "timeline.pdf")
-    return render_template("timeline_view.html", file_id=file_id)
+    file_id = None
+    error_message = None
+    selected_term = ""
+    
+    if request.method == "POST":
+        selected_term = request.form.get("timeline_term")
+        if selected_term:
+            filename = f"{selected_term}_timeline.pdf"
+            file_id = find_exam_or_timeline_file("timeline", filename)
+            if not file_id:
+                # محاولة البحث عن اسم بديل لو الملف اسمه timeline.pdf مباشر
+                file_id = find_exam_or_timeline_file("timeline", "timeline.pdf")
+            if not file_id:
+                error_message = "عذراً، الجدول الزمني العام غير متاح حالياً."
+        else:
+            error_message = "يرجى اختيار الفصل الدراسي."
+            
+    return render_template("timeline_view.html", 
+                           file_id=file_id, 
+                           error_message=error_message,
+                           selected_term=selected_term)
 
 # صفحة التقييمات المستقلة
 @app.route("/exams_timeline/evaluations", methods=["GET", "POST"])
