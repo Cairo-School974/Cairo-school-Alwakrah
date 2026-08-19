@@ -93,53 +93,62 @@ def find_nested_file_in_drive(subfolder_name, file_name):
 def home(): 
     return render_template("index.html")
 
-# صفحة اتصل بنا (تعمل بدون أخطاء 404)
+# صفحة اتصل بنا مع فحص التأكد من وجود الملف أو عرض قالب بديل آمن لمنع الخطأ الأبيض
 @app.route("/contact")
 def contact():
-    return render_template("contact.html")
+    try:
+        return render_template("contact.html")
+    except:
+        return """
+        <!DOCTYPE html>
+        <html lang="ar" dir="rtl">
+        <head>
+            <meta charset="UTF-8">
+            <title>اتصل بنا</title>
+            <link rel="stylesheet" href="/static/style.css">
+        </head>
+        <body style="background:#0d1117; color:#fff; font-family:Tahoma; text-align:center; padding:50px;">
+            <div style="background:rgba(26,26,46,0.9); padding:40px; border-radius:15px; max-width:600px; margin:auto; border:1px solid rgba(255,255,255,0.1);">
+                <h1>اتصل بنا</h1>
+                <p style="margin:20px 0; color:#a0a0a0;">مرحباً بك، يمكنك التواصل معنا عبر البريد الإلكتروني أو أرقام هاتف المدرسة.</p>
+                <a href="/" style="display:inline-block; padding:10px 25px; background:#00b4d8; color:#fff; border-radius:20px; text-decoration:none; font-weight:bold;">العودة للرئيسية</a>
+            </div>
+        </body>
+        </html>
+        """, 200
 
 # صفحة المربعات الثلاثة الرئيسية
 @app.route("/exams_timeline")
 def exams_timeline(): 
     return render_template("exams_timeline.html")
 
-# صفحة الجدول الزمني العام المستقلة (مربوطة بـ Google Drive للبحث عن ملف timeline.pdf أو ما شابه)
 @app.route("/exams_timeline/timeline", methods=["GET", "POST"])
 def timeline_page():
     file_id = None
     error_message = None
     selected_term = ""
-    
     if request.method == "POST":
         selected_term = request.form.get("timeline_term")
         if selected_term:
             filename = f"{selected_term}_timeline.pdf"
             file_id = find_exam_or_timeline_file("timeline", filename)
             if not file_id:
-                # محاولة البحث عن اسم بديل لو الملف اسمه timeline.pdf مباشر
                 file_id = find_exam_or_timeline_file("timeline", "timeline.pdf")
             if not file_id:
                 error_message = "عذراً، الجدول الزمني العام غير متاح حالياً."
         else:
             error_message = "يرجى اختيار الفصل الدراسي."
-            
-    return render_template("timeline_view.html", 
-                           file_id=file_id, 
-                           error_message=error_message,
-                           selected_term=selected_term)
+    return render_template("timeline_view.html", file_id=file_id, error_message=error_message, selected_term=selected_term)
 
-# صفحة التقييمات المستقلة
 @app.route("/exams_timeline/evaluations", methods=["GET", "POST"])
 def evaluations_page():
     file_id = None
     error_message = None
     selected_term = ""
     selected_type = ""
-    
     if request.method == "POST":
         selected_term = request.form.get("eval_term")
         selected_type = request.form.get("eval_type")
-        
         if selected_term and selected_type:
             filename = f"{selected_term}_{selected_type}.pdf"
             file_id = find_exam_or_timeline_file("evaluations", filename)
@@ -147,23 +156,15 @@ def evaluations_page():
                 error_message = "عذراً، جدول التقييم غير متاح حالياً."
         else:
             error_message = "يرجى اختيار الفصل ونوع التقييم بدقة."
-            
-    return render_template("evaluations_view.html", 
-                           file_id=file_id, 
-                           error_message=error_message,
-                           selected_term=selected_term,
-                           selected_type=selected_type)
+    return render_template("evaluations_view.html", file_id=file_id, error_message=error_message, selected_term=selected_term, selected_type=selected_type)
 
-# صفحة اختبارات نهاية الفصل المستقلة
 @app.route("/exams_timeline/finals", methods=["GET", "POST"])
 def finals_page():
     file_id = None
     error_message = None
     selected_term = ""
-    
     if request.method == "POST":
         selected_term = request.form.get("final_term")
-        
         if selected_term:
             filename = f"{selected_term}_final.pdf"
             file_id = find_exam_or_timeline_file("finals", filename)
@@ -171,11 +172,7 @@ def finals_page():
                 error_message = "عذراً، جدول نهاية الفصل غير متاح حالياً."
         else:
             error_message = "يرجى اختيار الفصل الدراسي."
-            
-    return render_template("finals_view.html", 
-                           file_id=file_id, 
-                           error_message=error_message,
-                           selected_term=selected_term)
+    return render_template("finals_view.html", file_id=file_id, error_message=error_message, selected_term=selected_term)
 
 @app.route("/schedule_select", methods=["GET", "POST"])
 def schedule_select():
