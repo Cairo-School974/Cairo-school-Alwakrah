@@ -96,26 +96,7 @@ def home():
 # صفحة اتصل بنا مع فحص التأكد من وجود الملف أو عرض قالب بديل آمن لمنع الخطأ الأبيض
 @app.route("/contact")
 def contact():
-    try:
-        return render_template("contact.html")
-    except:
-        return """
-        <!DOCTYPE html>
-        <html lang="ar" dir="rtl">
-        <head>
-            <meta charset="UTF-8">
-            <title>اتصل بنا</title>
-            <link rel="stylesheet" href="/static/style.css">
-        </head>
-        <body style="background:#0d1117; color:#fff; font-family:Tahoma; text-align:center; padding:50px;">
-            <div style="background:rgba(26,26,46,0.9); padding:40px; border-radius:15px; max-width:600px; margin:auto; border:1px solid rgba(255,255,255,0.1);">
-                <h1>اتصل بنا</h1>
-                <p style="margin:20px 0; color:#a0a0a0;">مرحباً بك، يمكنك التواصل معنا عبر البريد الإلكتروني أو أرقام هاتف المدرسة.</p>
-                <a href="/" style="display:inline-block; padding:10px 25px; background:#00b4d8; color:#fff; border-radius:20px; text-decoration:none; font-weight:bold;">العودة للرئيسية</a>
-            </div>
-        </body>
-        </html>
-        """, 200
+    return render_template("contact.html")
 
 # صفحة المربعات الثلاثة الرئيسية
 @app.route("/exams_timeline")
